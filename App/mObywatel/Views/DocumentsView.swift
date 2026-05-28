@@ -63,7 +63,7 @@ struct DocumentsView: View {
                   path.addCurve(to: CGPoint(x: 350, y: 60), control1: CGPoint(x: 120, y: 150), control2: CGPoint(x: 240, y: 20))
                   path.addLine(to: CGPoint(x: 350, y: 226))
                   path.addLine(to: CGPoint(x: 0, y: 226))
-                  path.close()
+                  path.closeSubpath()
                 }
                 .fill(Color.red100.opacity(0.85))
                 .frame(height: 120)

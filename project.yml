@@ -29,7 +29,6 @@ targets:
         product: DesignSystem
     settings:
       base:
-        INFOPLIST_FILE: App/mObywatel/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: pl.gov.mobywatel.clone
         MARKETING_VERSION: "4.63.0"
         CURRENT_PROJECT_VERSION: "17"

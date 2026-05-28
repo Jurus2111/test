@@ -9,7 +9,7 @@ struct mDowodView: View {
   var body: some View {
     ZStack {
       // Very dark navy-black background matching the screenshot
-      Color(red: 0.03, green: 0.05, blue: 0.08)
+      Color(red: 0.05, green: 0.07, blue: 0.10)
         .ignoresSafeArea()
 
       VStack(spacing: 0) {
@@ -20,16 +20,17 @@ struct mDowodView: View {
           } label: {
             HStack(spacing: 4) {
               Image(systemName: "chevron.left")
+                .font(.system(size: 20, weight: .bold))
               Text("Wróć")
+                .font(.system(size: 17))
             }
-            .font(.body)
-            .foregroundColor(Color(red: 0.2, green: 0.55, blue: 0.95))
+            .foregroundColor(Color(red: 0.25, green: 0.56, blue: 0.96))
           }
 
           Spacer()
 
           Text("mDowód")
-            .font(.headline.weight(.semibold))
+            .font(.system(size: 17, weight: .semibold))
             .foregroundColor(.white)
 
           Spacer()
@@ -38,174 +39,153 @@ struct mDowodView: View {
             // Info action
           } label: {
             Image(systemName: "questionmark.circle")
-              .font(.title3)
-              .foregroundColor(.neutral200)
+              .font(.system(size: 20))
+              .foregroundColor(Color(red: 0.6, green: 0.63, blue: 0.68))
           }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
 
         ScrollView {
-          VStack(spacing: 20) {
-            // Live clock label
+          VStack(spacing: 16) {
+            // Live clock label matching screenshot: Czas: HH:mm:ss dd.MM.yyyy
             Text("Czas: \(currentTimeString)")
               .font(.system(size: 13, weight: .medium))
-              .foregroundColor(.neutral200)
+              .foregroundColor(Color(red: 0.6, green: 0.63, blue: 0.68))
               .padding(.top, 4)
               .onAppear { updateTime() }
               .onReceive(timer) { _ in updateTime() }
 
-            // Document Details Panel
-            VStack(alignment: .leading, spacing: 0) {
-              HStack(alignment: .top, spacing: 18) {
-                // Large white profile picture placeholder
-                RoundedRectangle(cornerRadius: 12)
-                  .fill(Color.white)
-                  .frame(width: 120, height: 156)
-                  .shadow(radius: 4)
-
-                // Detail columns
-                VStack(alignment: .leading, spacing: 12) {
-                  VStack(alignment: .leading, spacing: 2) {
-                    Text("JAN")
-                      .font(.system(size: 16, weight: .bold))
-                      .foregroundColor(.white)
-                    Text("Imię (imiona)")
-                      .font(.system(size: 11))
-                      .foregroundColor(.neutral200)
-                  }
-
-                  VStack(alignment: .leading, spacing: 2) {
-                    Text("KOWALSKI")
-                      .font(.system(size: 16, weight: .bold))
-                      .foregroundColor(.white)
-                    Text("Nazwisko")
-                      .font(.system(size: 11))
-                      .foregroundColor(.neutral200)
-                  }
-
-                  VStack(alignment: .leading, spacing: 2) {
-                    Text("POLSKIE")
-                      .font(.system(size: 16, weight: .bold))
-                      .foregroundColor(.white)
-                    Text("Obywatelstwo")
-                      .font(.system(size: 11))
-                      .foregroundColor(.neutral200)
-                  }
-                }
-              }
-              .padding(.bottom, 16)
-
-              // Flag + Emblem Row
-              HStack(alignment: .center, spacing: 20) {
-                // Red/White flag with rounded corners
-                VStack(spacing: 0) {
-                  Rectangle()
-                    .fill(Color.white)
-                    .frame(height: 18)
-                  Rectangle()
-                    .fill(Color.red100)
-                    .frame(height: 18)
-                }
-                .frame(width: 52, height: 36)
-                .cornerRadius(4)
-                .overlay(
-                  RoundedRectangle(cornerRadius: 4)
-                    .stroke(Color.white.opacity(0.15), lineWidth: 1)
+            // Document Details Panel (White/Light-Blue ID Card)
+            ZStack {
+              // Card base with light blue-white gradient and shadow
+              RoundedRectangle(cornerRadius: 16)
+                .fill(
+                  LinearGradient(
+                    gradient: Gradient(colors: [
+                      Color.white,
+                      Color(red: 0.94, green: 0.96, blue: 0.99)
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                  )
                 )
+                .shadow(color: Color.black.opacity(0.15), radius: 10, x: 0, y: 6)
 
-                // Eagle crest + Rzeczpospolita Polska
-                HStack(spacing: 8) {
-                  // Small Eagle Placeholder
-                  ZStack {
-                    Circle()
+              // Guilloche-like wave pattern overlay
+              GuillochePattern()
+                .opacity(0.12)
+                .clipped()
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+
+              // Card content
+              HStack(alignment: .top, spacing: 16) {
+                // Left Column: Photo + Flag + Eagle Emblem
+                VStack(alignment: .leading, spacing: 12) {
+                  // White Photo Placeholder
+                  RoundedRectangle(cornerRadius: 8)
+                    .fill(Color.white)
+                    .frame(width: 106, height: 138)
+                    .overlay(
+                      RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color.black.opacity(0.08), lineWidth: 1)
+                    )
+
+                  // Polish Flag
+                  VStack(spacing: 0) {
+                    Rectangle()
                       .fill(Color.white)
-                      .frame(width: 24, height: 24)
-                    Image(systemName: "bird.fill")
+                      .frame(height: 12)
+                    Rectangle()
+                      .fill(Color(red: 0.85, green: 0.08, blue: 0.2))
+                      .frame(height: 12)
+                  }
+                  .frame(width: 44, height: 24)
+                  .cornerRadius(2)
+                  .overlay(
+                    RoundedRectangle(cornerRadius: 2)
+                      .stroke(Color.black.opacity(0.08), lineWidth: 0.5)
+                  )
+
+                  // Eagle + Rzeczpospolita Polska
+                  HStack(spacing: 4) {
+                    Image("AppLogo", bundle: bundle)
+                      .renderingMode(.template)
                       .resizable()
                       .scaledToFit()
-                      .frame(width: 14, height: 14)
-                      .foregroundColor(.black)
-                  }
+                      .frame(width: 22, height: 22)
+                      .foregroundColor(Color.black.opacity(0.4))
 
-                  VStack(alignment: .leading, spacing: 0) {
-                    Text("Rzeczpospolita")
-                      .font(.system(size: 10, weight: .bold))
-                    Text("Polska")
-                      .font(.system(size: 10, weight: .bold))
+                    VStack(alignment: .leading, spacing: 0) {
+                      Text("Rzeczpospolita")
+                        .font(.system(size: 7, weight: .bold))
+                      Text("Polska")
+                        .font(.system(size: 7, weight: .bold))
+                    }
+                    .foregroundColor(Color.black.opacity(0.5))
                   }
-                  .foregroundColor(.white)
                 }
 
-                Spacer()
-              }
-              .padding(.bottom, 20)
-
-              // Remaining profile elements
-              VStack(alignment: .leading, spacing: 12) {
-                VStack(alignment: .leading, spacing: 2) {
-                  Text("15.05.2007")
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundColor(.white)
-                  Text("Data urodzenia")
-                    .font(.system(size: 11))
-                    .foregroundColor(.neutral200)
-                }
-
-                VStack(alignment: .leading, spacing: 2) {
-                  Text("07251512344")
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundColor(.white)
-                  Text("Numer PESEL")
-                    .font(.system(size: 11))
-                    .foregroundColor(.neutral200)
+                // Right Column: Vertical stack of fields
+                VStack(alignment: .leading, spacing: 6) {
+                  DocumentField(value: "JAN", label: "Imię (imiona)")
+                  DocumentField(value: "KOWALSKI", label: "Nazwisko")
+                  DocumentField(value: "POLSKIE", label: "Obywatelstwo")
+                  DocumentField(value: "15.05.2007", label: "Data urodzenia")
+                  DocumentField(value: "98051508432", label: "Numer PESEL")
                 }
               }
+              .padding(16)
             }
-            .padding(20)
-            .background(
-              RoundedRectangle(cornerRadius: 16)
-                .fill(Color.neutral500.opacity(0.08))
-            )
             .padding(.horizontal, 16)
 
-            // Green "Dokument ważny" status box
+            // Green status row
             HStack(spacing: 12) {
               ZStack {
                 Circle()
-                  .fill(Color.green100.opacity(0.2))
-                  .frame(width: 24, height: 24)
+                  .stroke(Color(red: 0.18, green: 0.70, blue: 0.35), lineWidth: 2)
+                  .frame(width: 22, height: 22)
+
                 Image(systemName: "checkmark")
-                  .font(.system(size: 12, weight: .bold))
-                  .foregroundColor(.green100)
+                  .font(.system(size: 10, weight: .bold))
+                  .foregroundColor(Color(red: 0.18, green: 0.70, blue: 0.35))
               }
 
               Text("Dokument ważny")
                 .font(.system(size: 15, weight: .bold))
-                .foregroundColor(.green100)
+                .foregroundColor(Color(red: 0.18, green: 0.70, blue: 0.35))
 
               Spacer()
             }
-            .padding(.horizontal, 20)
-            .frame(height: 54)
+            .padding(.horizontal, 16)
+            .frame(height: 52)
             .background(
               RoundedRectangle(cornerRadius: 12)
-                .fill(Color.neutral500.opacity(0.1))
+                .fill(Color(red: 0.08, green: 0.14, blue: 0.10))
             )
             .padding(.horizontal, 16)
 
-            // Shortcuts Row (4 icons)
+            // Shortcuts Grid Row
             HStack(alignment: .top, spacing: 0) {
-              ShortcutItem(iconName: "person.badge.shield.checkmark.fill", text: "Potwierdź swoje dane")
+              ShortcutItem(iconName: "qrcode.viewfinder", text: "Potwierdź\nswoje dane")
               Spacer()
-              ShortcutItem(iconName: "doc.text.fill", text: "Dane dowodu osobistego")
+              ShortcutItem(iconName: "person.text.rectangle", text: "Dane\ndowodu")
               Spacer()
-              ShortcutItem(iconName: "lock.shield.fill", text: "Zastrzeż PESEL")
+              ShortcutItem(iconName: "lock.shield", text: "Zastrzeż\nPESEL")
               Spacer()
-              ShortcutItem(iconName: "ellipsis", text: "Pozostałe skróty")
+              ShortcutItem(iconName: "ellipsis", text: "Pozostałe\nskróty")
             }
-            .padding(.horizontal, 16)
-            .padding(.top, 10)
+            .padding(.horizontal, 24)
+            .padding(.top, 14)
+
+            // Lower Section Header Placeholder
+            VStack(alignment: .leading, spacing: 0) {
+              Text("Seria i numer mDowodu")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(Color(red: 0.6, green: 0.63, blue: 0.68))
+                .padding(.horizontal, 24)
+                .padding(.top, 20)
+            }
 
             Spacer(minLength: 40)
           }
@@ -221,6 +201,55 @@ struct mDowodView: View {
   }
 }
 
+// Custom view helper for Document fields
+struct DocumentField: View {
+  let value: String
+  let label: String
+
+  var body: some View {
+    VStack(alignment: .leading, spacing: 0) {
+      Text(value)
+        .font(.system(size: 15, weight: .bold))
+        .foregroundColor(.black)
+      Text(label)
+        .font(.system(size: 10))
+        .foregroundColor(Color.black.opacity(0.4))
+    }
+    .padding(.bottom, 2)
+  }
+}
+
+// Custom Guilloche/wave pattern design
+struct GuillochePattern: View {
+  var body: some View {
+    Canvas { context, size in
+      let center = CGPoint(x: size.width * 0.7, y: size.height * 0.7)
+      let numberOfRings = 20
+      let baseRadius: CGFloat = size.width * 0.1
+      let spacing: CGFloat = 12
+
+      for i in 0..<numberOfRings {
+        let radius = baseRadius + CGFloat(i) * spacing
+        var path = Path()
+        path.addArc(
+          center: center,
+          radius: radius,
+          startAngle: .degrees(0),
+          endAngle: .degrees(360),
+          clockwise: false
+        )
+
+        // Draw overlapping waves using dash patterns and opacity
+        context.stroke(
+          path,
+          with: .color(Color(red: 0.15, green: 0.45, blue: 0.85).opacity(0.12)),
+          lineWidth: 0.6
+        )
+      }
+    }
+  }
+}
+
 struct ShortcutItem: View {
   let iconName: String
   let text: String
@@ -229,14 +258,16 @@ struct ShortcutItem: View {
     VStack(spacing: 8) {
       ZStack {
         Circle()
-          .fill(Color.neutral500.opacity(0.15))
-          .frame(width: 52, height: 52)
+          .fill(Color.white.opacity(0.06))
+          .frame(width: 56, height: 56)
+          .overlay(
+            Circle()
+              .stroke(Color.white.opacity(0.1), lineWidth: 1)
+          )
 
         Image(systemName: iconName)
-          .resizable()
-          .scaledToFit()
-          .frame(width: 24, height: 24)
-          .foregroundColor(Color(red: 0.2, green: 0.55, blue: 0.95))
+          .font(.system(size: 24))
+          .foregroundColor(Color(red: 0.35, green: 0.65, blue: 0.98))
       }
 
       Text(text)
@@ -244,7 +275,7 @@ struct ShortcutItem: View {
         .foregroundColor(.white)
         .multilineTextAlignment(.center)
         .lineLimit(2)
-        .frame(width: 84)
+        .frame(width: 80)
     }
   }
 }

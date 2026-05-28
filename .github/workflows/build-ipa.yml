@@ -1,0 +1,41 @@
+name: Build unsigned IPA
+on:
+  push:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode Project
+        run: xcodegen generate
+
+      - name: Build Archive (unsigned)
+        run: |
+          xcodebuild archive \
+            -project mObywatel.xcodeproj \
+            -scheme mObywatel \
+            -configuration Release \
+            -archivePath build/mObywatel.xcarchive \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Create IPA Package
+        run: |
+          mkdir -p Payload
+          cp -r build/mObywatel.xcarchive/Products/Applications/mObywatel.app Payload/
+          zip -r mObywatel.ipa Payload
+
+      - name: Upload unsigned IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mObywatel-unsigned-ipa
+          path: mObywatel.ipa
